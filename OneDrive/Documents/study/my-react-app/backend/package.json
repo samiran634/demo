@@ -1,7 +1,10 @@
 {
+  "engines": {
+    "node": "v23.2.0"
+  },
  "scripts": {
   "start": "node server.js",
-  "build": "babel src -d dist"
+  "build": "npm install"
  },
  "dependencies": {
   "@babel/cli": "^7.26.4",
