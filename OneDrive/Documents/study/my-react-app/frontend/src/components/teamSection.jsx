@@ -10,7 +10,7 @@ const TeamContainer = () => {
     const [isClicked, setIsClicked] = useState(false);
     const [optimizedTransactions, setOptimizedTransactions] = useState([]);
     useEffect(() => {
-        fetch("http://localhost:3000/fetchmembers")
+        fetch("https://demo-iipo.onrender.com/fetchmembers")
             .then(response => response.json())
             .then(data => setMembers(data))
             .catch(error => console.error("Error fetching members:", error));
@@ -18,7 +18,7 @@ const TeamContainer = () => {
     // Function to optimize transactions
     const optimizeTransactions = async () => {
         try {
-            const response = await fetch("http://localhost:3000/optimize", {
+            const response = await fetch("https://demo-iipo.onrender.com/optimize", {
                 method: "GET",
             });
             const data = await response.json();

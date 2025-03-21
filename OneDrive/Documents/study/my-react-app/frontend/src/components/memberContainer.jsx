@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 const MemberContainer = ({ member, onDelete }) => {
     useEffect(() => {
-        fetch('http://localhost:3000/memberupload', {
+        fetch('https://demo-iipo.onrender.com/memberupload', {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
@@ -15,7 +15,7 @@ const MemberContainer = ({ member, onDelete }) => {
     }, [member]);
 
     const handleDelete = () => {
-        fetch('http://localhost:3000/delete', {
+        fetch('https://demo-iipo.onrender.com/delete', {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
