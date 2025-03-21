@@ -1,28 +1,71 @@
-import { use, useEffect } from "react";
-const MemberContainer = (props) => {
-    const { member } = props;
-useEffect(() => {
-    fetch('/memberupload',member)
+import { useEffect } from "react";
+
+const MemberContainer = ({ member, onDelete }) => {
+    useEffect(() => {
+        fetch('http://localhost:3000/memberupload', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(member) 
+        })
+        .then(response => response.json())
+        .then(data => console.log("Upload Response:", data))
+        .catch(error => console.error("Error uploading member:", error));
+    }, [member]);
+
+    const handleDelete = () => {
+        fetch('http://localhost:3000/delete', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ memberName: member.memberName })  
+        })
         .then(response => response.json())
         .then(data => {
-            console.log(data);
-        });
-}, []);
-    
-    
-    console.log(member);
+            console.log("Delete Response:", data);
+            if (onDelete) onDelete(member.memberName);  
+        })
+        .catch(error => console.error("Error deleting member:", error));
+    };
+
     return (
-        <div style={{ border: '1px solid #ccc', borderRadius: '8px', padding: '16px', maxWidth: '300px', margin: '16px auto', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
-            <h2 style={{ margin: '0 0 16px 0', fontSize: '1.5em', color: '#333' }}>{member.memberName}</h2>
-            <p style={{ margin: '8px 0', fontSize: '1em', color: '#666' }}>amount: ${member.amount}</p>
+        <div style={{
+            border: '1px solid #ccc',
+            borderRadius: '8px',
+            padding: '16px',
+            maxWidth: '300px',
+            margin: '16px auto',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+            position: 'relative'
+        }}>
+            <h2 style={{ margin: '0 0 16px 0', fontSize: '1.5em', color: '#333' }}>
+                {member.memberName}
+            </h2>
             <p style={{ margin: '8px 0', fontSize: '1em', color: '#666' }}>
-                Have debt with: {member.relationship && member.relationship.type === 'debt' ? member.relationship.memberName : 'none'}
+                Amount: ${member.amount}
             </p>
             <p style={{ margin: '8px 0', fontSize: '1em', color: '#666' }}>
-                Owe: {member.relationship && member.relationship.type === 'owe' ? member.relationship.memberName : 'none'}
+                Have debt with: {member.relationship?.type === 'debt' ? member.relationship.memberName : 'none'}
             </p>
+            <p style={{ margin: '8px 0', fontSize: '1em', color: '#666' }}>
+                Owe: {member.relationship?.type === 'owe' ? member.relationship.memberName : 'none'}
+            </p>
+            
+            <button onClick={handleDelete} style={{
+                marginTop: '10px',
+                padding: '8px 12px',
+                backgroundColor: 'red',
+                color: 'white',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer'
+            }}>
+                Delete
+            </button>
         </div>
     );
-}
+};
 
 export default MemberContainer;

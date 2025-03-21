@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import MemberContainer from "./memberContainer";
 
 const TeamContainer = () => {
@@ -9,11 +9,16 @@ const TeamContainer = () => {
     const [personName, setPersonName] = useState("");
     const [isClicked, setIsClicked] = useState(false);
     const [optimizedTransactions, setOptimizedTransactions] = useState([]);
-
+    useEffect(() => {
+        fetch("http://localhost:3000/fetchmembers")
+            .then(response => response.json())
+            .then(data => setMembers(data))
+            .catch(error => console.error("Error fetching members:", error));
+    }, []);
     // Function to optimize transactions
     const optimizeTransactions = async () => {
         try {
-            const response = await fetch("/optimize", {
+            const response = await fetch("http://localhost:3000/optimize", {
                 method: "GET",
             });
             const data = await response.json();
@@ -55,7 +60,7 @@ const TeamContainer = () => {
                 </>
             )}
 
-            {/* Add Member Modal */}
+         
             {isClicked && (
                 <div className="flex flex-col bg-blue-100 p-4 rounded-lg mt-4 w-[90%] max-w-sm mx-auto text-black shadow-lg absolute top-20 left-1/2 transform -translate-x-1/2">
                     <h1 className="text-xl font-bold">Add Member</h1>
@@ -110,7 +115,7 @@ const TeamContainer = () => {
                 </div>
             )}
 
-            {/* Optimize Transactions Button */}
+           
             {members.length >= 2 && (
                 <button
                     className="bg-green-500 text-white font-bold py-2 px-4 rounded mt-4 hover:bg-green-600"
@@ -120,7 +125,6 @@ const TeamContainer = () => {
                 </button>
             )}
 
-            {/* Display Optimized Transactions */}
             {optimizedTransactions.length > 0 && (
                 <div className="mt-6 p-4 bg-white rounded-lg shadow-md">
                     <h2 className="text-lg font-bold text-gray-800">Optimized Transactions:</h2>
