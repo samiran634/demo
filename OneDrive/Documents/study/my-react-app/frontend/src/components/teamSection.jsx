@@ -1,8 +1,9 @@
 import { useState,useEffect } from "react";
 import MemberContainer from "./memberContainer";
-
+import ExistingMemberContainer from "./existingMemberContainer";
 const TeamContainer = () => {
     const [members, setMembers] = useState([]);
+    const [existingMembers,setExistingMembers]=useState([]);
     const [memberName, setMemberName] = useState("");
     const [amount, setAmount] = useState(0);
     const [relationshipType, setRelationshipType] = useState("");
@@ -12,8 +13,9 @@ const TeamContainer = () => {
     useEffect(() => {
         fetch("https://demo-iipo.onrender.com/fetchmembers")
             .then(response => response.json())
-            .then(data => setMembers(data))
+            .then(data => setExistingMembers(data))
             .catch(error => console.error("Error fetching members:", error));
+            
     }, []);
     // Function to optimize transactions
     const optimizeTransactions = async () => {
@@ -31,10 +33,24 @@ const TeamContainer = () => {
     return (
         <div className="flex flex-col h-auto w-full max-w-4xl bg-gray-200 rounded-lg p-6">
             <h1 className="text-2xl font-bold text-amber-700 text-center">Create Your Group</h1>
-
+            {
+                existingMembers.length===0?(
+                    <div className="flex flex-col items-center justify-center h-40">
+                    <p className="text-gray-600">No members are previously added</p>
+                </div>
+                ):(
+                    <>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+                    {existingMembers.map((member, index) => (
+                        <ExistingMemberContainer key={index} member={member} />
+                    ))}
+                </div>
+                </>
+                )
+            }
             {members.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-40">
-                    <p className="text-gray-600">No members added yet.</p>
+                    <p className="text-gray-600">please add new members</p>
                     <button
                         className="mt-4 bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600"
                         onClick={() => setIsClicked(true)}
@@ -60,10 +76,15 @@ const TeamContainer = () => {
                 </>
             )}
 
-         
             {isClicked && (
+
                 <div className="flex flex-col bg-blue-100 p-4 rounded-lg mt-4 w-[90%] max-w-sm mx-auto text-black shadow-lg absolute top-20 left-1/2 transform -translate-x-1/2">
-                    <h1 className="text-xl font-bold">Add Member</h1>
+                    <div className="flex flex-direction-row gap-2"> 
+                        <h1 className="text-xl font-bold ">Add Member</h1>
+                    <div className="font-bold flex justify-center cursor-pointer" onClick={()=>{
+                        setIsClicked(false)
+                    }}>❌</div></div>
+                   
                     <input
                         type="text"
                         placeholder="Member Name"
@@ -116,7 +137,7 @@ const TeamContainer = () => {
             )}
 
            
-            {members.length >= 2 && (
+            {members.length+existingMembers.length >= 2 && (
                 <button
                     className="bg-green-500 text-white font-bold py-2 px-4 rounded mt-4 hover:bg-green-600"
                     onClick={optimizeTransactions}

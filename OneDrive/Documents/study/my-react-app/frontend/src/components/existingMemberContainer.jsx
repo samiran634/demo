@@ -1,19 +1,8 @@
-import {useState, useEffect } from "react";
+import {useState  } from "react";
 
-const MemberContainer = ({ member, onDelete }) => {
+const ExistingMemberContainer = ({ member, onDelete }) => {
     const [isClicked,setIsClicked]=useState(true);
-    useEffect(() => {
-        fetch('https://demo-iipo.onrender.com/memberupload', {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(member) 
-        })
-        .then(response => response.json())
-        .then(data => console.log("Upload Response:", data))
-        .catch(error => console.error("Error uploading member:", error));
-    }, [member]);
+    console.log(member);
 
     const handleDelete = () => {
         fetch('https://demo-iipo.onrender.com/delete', {
@@ -52,10 +41,10 @@ const MemberContainer = ({ member, onDelete }) => {
                     Amount: ${member.amount}
                 </p>
                 <p style={{ margin: '8px 0', fontSize: '1em', color: '#666' }}>
-                    Have debt with: {member.relationship?.type === 'debt' ? member.relationship.memberName : 'none'}
+                    Have debt with: {member.relationship[0]?.type === 'debt' ? member.relationship[0].memberName : 'none'}
                 </p>
                 <p style={{ margin: '8px 0', fontSize: '1em', color: '#666' }}>
-                    Owe: {member.relationship?.type === 'owe' ? member.relationship.memberName : 'none'}
+                    Owe: {member.relationship[0]?.type === 'owe' ? member.relationship[0].memberName : 'none'}
                 </p>
                 
                 <button onClick={handleDelete} style={{
@@ -76,4 +65,4 @@ const MemberContainer = ({ member, onDelete }) => {
     );
 };
 
-export default MemberContainer;
+export default ExistingMemberContainer;

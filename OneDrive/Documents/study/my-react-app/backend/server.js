@@ -134,7 +134,7 @@ function optimizeTransactions(members) {
     const seen = new Set();
 
     members.forEach(({ memberName, amount, relationship }) => {
-        const key = `${memberName}-${amount}-${relationship.memberName}`;
+        const key = `${memberName}-${amount}-${relationship[0].memberName}`;
         if (!seen.has(key)) {
             seen.add(key);
             uniqueMembers.push({ memberName, amount, relationship });
@@ -144,7 +144,7 @@ function optimizeTransactions(members) {
     // Step 2: Compute net balance of each person
     uniqueMembers.forEach(({ memberName, amount, relationship }) => {
         if (!balance[memberName]) balance[memberName] = 0;
-        const relatedPerson = relationship.memberName; 
+        const relatedPerson = relationship[0].memberName; 
         if (!balance[relatedPerson]) balance[relatedPerson] = 0;
 
         // Reduce amount for debtor and increase for creditor
